@@ -37,4 +37,17 @@
   const b: Array<number> = [1, 2, 3];
 
   const tuple1: [number, string] = [1, '2']; // useState 와 같은 dynamic 할당. 최대한 interface, type alias 를 쓰기
+
+  type Student = {
+    name: string;
+    age: number;
+  };
+
+  const studentData: Student = {
+    age: 1,
+    name: 'park',
+  };
+
+  type Foods = 'banana';
+  const fruit1: Foods = 'banana';
 }
