@@ -1,80 +1,183 @@
 {
-  type ExerciseEffect = {
-    fatBurn: string;
-    muscleGain: string;
+  /**
+   * 1. 성인, 2. 직업은 분리.
+   */
+
+  type LeftFromWork = {
+    earnMoney: number;
+    stress: number;
   };
 
-  interface Women {
-    makeUp(time: number): void;
+  type HappyPoint = {
+    lostMoney: number;
+    happiness: number;
+  };
+
+  interface Work {
+    work(time: number): LeftFromWork;
   }
 
-  interface Men {
-    weightTraining(time: number): ExerciseEffect;
+  interface Play {
+    play(cost: number): HappyPoint;
   }
 
-  class Adult implements Women, Men {
+  interface WorkManager {
+    helpWork(lobby: number, requiredTime: number): number;
+  }
+
+  class SuperiorPark implements WorkManager {
+    constructor(private account: number, private idleTime: number) {}
+    helpWork(lobby: number, requiredTime: number): number {
+      const helpAmount = 50;
+      this.account += lobby;
+      this.idleTime -= requiredTime;
+      return helpAmount;
+    }
+  }
+
+  class SuperiorLee implements WorkManager {
+    constructor(private account: number, private idleTime: number) {}
+    helpWork(lobby: number, requiredTime: number): number {
+      const helpAmount = 20;
+      this.account += lobby;
+      this.idleTime -= requiredTime;
+      return helpAmount;
+    }
+  }
+
+  class Boss implements WorkManager {
+    constructor(private account: number, private idleTime: number) {}
+    helpWork(lobby: number, requiredTime: number): number {
+      const helpAmount = 100;
+      this.account += lobby;
+      this.idleTime -= requiredTime;
+      return helpAmount;
+    }
+  }
+
+  interface Teacher {
+    teach(money: number, requiredTime: number): string;
+  }
+
+  class TennisTeacher implements Teacher {
+    constructor(private account: number, private idleTime: number) {}
+
+    teach(money: number, requiredTime: number): string {
+      this.account += money;
+      this.idleTime -= requiredTime;
+      return 'tennis ability';
+    }
+  }
+
+  class FootballTeacher implements Teacher {
+    constructor(private account: number, private idleTime: number) {}
+
+    teach(money: number, requiredTime: number): string {
+      this.account += money;
+      this.idleTime -= requiredTime;
+      return 'Football ability';
+    }
+  }
+
+  class SwimmingTeacher implements Teacher {
+    constructor(private account: number, private idleTime: number) {}
+
+    teach(money: number, requiredTime: number): string {
+      this.account += money;
+      this.idleTime -= requiredTime;
+      return 'Swimming ability';
+    }
+  }
+
+  class Adult {
     constructor(
       protected age: number,
       protected name: string,
-      protected hobbyList: string[]
+      protected address: string
     ) {}
 
-    makeUp(time: number): void {
-      console.log(`make up during ${time} minutes`);
+    prepare(time: number): void {
+      console.log(`prepare during ${time} minutes`);
     }
 
-    weightTraining(time: number): { fatBurn: string; muscleGain: string } {
-      console.log(`doing exerise during ${time} minutes`);
+    eat(food: string) {
+      console.log(`eating ${food}...`);
+    }
+
+    sleep(hours: string) {
+      console.log(`sleeping ${hours} hours`);
+    }
+  }
+
+  class SocityAdult extends Adult implements Work, Play {
+    constructor(
+      protected age: number,
+      protected name: string,
+      protected address: string,
+      private budget: number,
+      private stress: number,
+      private manager: WorkManager,
+      private teacher: Teacher,
+      private hobbyList: string[]
+    ) {
+      super(age, name, address);
+    }
+
+    prepare(time: number): void {
+      console.log(`prepare during ${time / 2} minutes`);
+    }
+
+    work(time: number): { earnMoney: number; stress: number } {
+      this.manager.helpWork(this.budget, 60);
       return {
-        fatBurn: '100 kcal',
-        muscleGain: '0.2kg',
+        earnMoney: 100 - this.budget,
+        stress: this.stress + 60,
       };
     }
 
-    doingHobby() {
-      this.hobbyList.forEach((hobby) =>
-        console.log(`I'm happy doing ${hobby}`)
-      );
+    play(cost: number): { lostMoney: number; happiness: number } {
+      const newHobby = this.teacher.teach(cost, 100);
+      this.hobbyList.push(newHobby);
+      return {
+        lostMoney: cost,
+        happiness: 100,
+      };
     }
   }
 
-  class SocityAdult extends Adult {
-    constructor(
-      protected age: number,
-      protected name: string,
-      protected hobbyList: string[],
-      private workingTime: number
-    ) {
-      super(age, name, hobbyList);
-    }
+  const personA = new SocityAdult(
+    20,
+    'park',
+    'seoul',
+    100,
+    30,
+    new SuperiorLee(50, 100),
+    new TennisTeacher(100, 500),
+    ['baseball']
+  );
 
-    makeUp(time: number): void {
-      console.log(`make up during ${time / 2} minutes`);
-    }
+  personA.work(100);
+  personA.play(1000);
 
-    work() {
-      console.log(`i work as ${this.workingTime} hours`);
-    }
-  }
+  const personB = new SocityAdult(
+    30,
+    'Lee',
+    'seoul',
+    100,
+    30,
+    new SuperiorPark(50, 100),
+    new FootballTeacher(100, 500),
+    ['swimming']
+  );
 
-  class RetiredAdult extends Adult {
-    doingHobby(): void {
-      super.doingHobby();
-      console.log('also happy doing hobby with retired friends');
-    }
-
-    makeUp(time: number): void {
-      console.log(`make up during ${time / 100} minutes`);
-    }
-  }
-  const socialAdult = new SocityAdult(30, 'park', ['soccer', 'reading'], 8);
-  const adults: Adult[] = [
-    new Adult(20, 'kim', ['drinking', 'playing']),
-    new SocityAdult(40, 'park', ['golf', 'tennis'], 8),
-    new RetiredAdult(70, 'lee', ['gateBall', 'talk']),
-  ];
-  adults.forEach((adult) => {
-    console.log('-------------------------------------------');
-    adult.doingHobby();
-  });
+  const personC = new SocityAdult(
+    50,
+    'Lee',
+    'Gyeunggi',
+    100,
+    30,
+    new SuperiorPark(50, 100),
+    new SwimmingTeacher(100, 500),
+    ['BasketBall']
+  );
 }
