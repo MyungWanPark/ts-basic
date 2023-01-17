@@ -49,7 +49,7 @@
     }
 
     makeUp(time: number): void {
-      console.log(`doing make takes ${time / 2} minutes`);
+      console.log(`make up during ${time / 2} minutes`);
     }
 
     work() {
@@ -57,6 +57,24 @@
     }
   }
 
+  class RetiredAdult extends Adult {
+    doingHobby(): void {
+      super.doingHobby();
+      console.log('also happy doing hobby with retired friends');
+    }
+
+    makeUp(time: number): void {
+      console.log(`make up during ${time / 100} minutes`);
+    }
+  }
   const socialAdult = new SocityAdult(30, 'park', ['soccer', 'reading'], 8);
-  socialAdult.work();
+  const adults: Adult[] = [
+    new Adult(20, 'kim', ['drinking', 'playing']),
+    new SocityAdult(40, 'park', ['golf', 'tennis'], 8),
+    new RetiredAdult(70, 'lee', ['gateBall', 'talk']),
+  ];
+  adults.forEach((adult) => {
+    console.log('-------------------------------------------');
+    adult.doingHobby();
+  });
 }
