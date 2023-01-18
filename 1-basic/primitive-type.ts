@@ -143,4 +143,7 @@
   }
 
   let numArr = findNumber()!.length;
+
+  type Options = 'open' | 'close';
+  const select: Options = 'close';
 }
