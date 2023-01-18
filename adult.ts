@@ -89,16 +89,14 @@
     }
   }
 
-  class Adult {
+  abstract class Adult {
     constructor(
       protected age: number,
       protected name: string,
       protected address: string
     ) {}
 
-    prepare(time: number): void {
-      console.log(`prepare during ${time} minutes`);
-    }
+    protected abstract prepare(time: number): void;
 
     eat(food: string) {
       console.log(`eating ${food}...`);
