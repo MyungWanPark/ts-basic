@@ -28,6 +28,7 @@
         value,
         next: this.head,
       };
+
       this.head = node;
       this._size++;
     }

@@ -1,10 +1,27 @@
 {
-  function isNull<T>(args: T): T {
-    if (args == null) {
-      throw new Error('not a valid type');
-    }
-    return args;
+  interface Basket<B, M, T> {
+    bottom(): B;
+    middle: () => M;
+    top: () => T;
   }
 
-  const result: string = isNull('hello');
+  class FoodBasket<B, M, T> implements Basket<B, M, T> {
+    constructor(
+      private readonly bottomItem: B,
+      private readonly middleItem: M,
+      private readonly topItem: T
+    ) {}
+
+    bottom(): B {
+      return this.bottomItem;
+    }
+
+    middle(): M {
+      return this.middleItem;
+    }
+
+    top(): T {
+      return this.topItem;
+    }
+  }
 }
