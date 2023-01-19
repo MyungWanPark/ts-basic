@@ -11,18 +11,25 @@
   type ResultState = SuccessState | FailureState;
 
   class HttpClient {
-    connectNetwork(): ResultState {
-      return {
-        result: 'failure',
-        reason: 'InternalServer',
-      };
+    connectNetwork() {
+      throw new Error('connection error');
     }
   }
 
   class UserService {
     constructor(private client: HttpClient) {}
-    login() {
-      return this.client.connectNetwork();
+    login(): ResultState {
+      try {
+        this.client.connectNetwork();
+        return {
+          result: 'success',
+        };
+      } catch (error) {
+        return {
+          result: 'failure',
+          reason: 'InternalServer',
+        };
+      }
     }
   }
 
