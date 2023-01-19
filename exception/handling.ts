@@ -1,14 +1,28 @@
 {
+  type FailureState = {
+    result: 'failure';
+    reason: 'Network' | 'Offline' | 'InternalServer';
+  };
+
+  type SuccessState = {
+    result: 'success';
+  };
+
+  type ResultState = SuccessState | FailureState;
+
   class HttpClient {
-    connectNetwork() {
-      throw new Error('Network is not connected!');
+    connectNetwork(): ResultState {
+      return {
+        result: 'failure',
+        reason: 'InternalServer',
+      };
     }
   }
 
   class UserService {
     constructor(private client: HttpClient) {}
     login() {
-      this.client.connectNetwork();
+      return this.client.connectNetwork();
     }
   }
 
@@ -16,11 +30,11 @@
     constructor(private service: UserService) {}
 
     run() {
-      try {
-        this.service.login();
-      } catch (error) {
-        // show dialog about user network connection
-        console.log('catched error');
+      const resultData = this.service.login();
+      if (resultData.result === 'success') {
+        console.log('로그인 성공입니다.');
+      } else {
+        console.log(`${resultData.reason} 에러 입니다.`);
       }
     }
   }
