@@ -42,4 +42,25 @@
       },
     },
   };
+
+  function proxify<T extends object>(o: T): Proxify<T> {
+    const result = {} as Proxify<T>;
+    for (let key in o) {
+      let rawValue = o[key];
+      result[key] = {
+        get: () => rawValue,
+        set: (value) => {
+          rawValue = value;
+        },
+      };
+    }
+    return result;
+  }
+
+  const props = {
+    room: 5,
+  };
+  const proxifiedProps = proxify(props);
+  proxifiedProps.room.set(10);
+  console.log(proxifiedProps.room.get());
 }
