@@ -8,7 +8,7 @@
 
   type metaVideoData = Pick<Video, 'author' | 'id'>;
 
-  function getMetaData(): metaVideoData {
+  function getMetaData1(): metaVideoData {
     return {
       author: 'soren',
       id: '1',
