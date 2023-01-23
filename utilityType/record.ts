@@ -16,4 +16,5 @@
       name: 'transparent',
     },
   };
+  const types: Uppercase<ColorUsage> = 'HOBBY';
 }
